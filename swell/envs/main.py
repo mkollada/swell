@@ -2,10 +2,10 @@ from functools import partial
 import pygame
 from pygame.locals import K_ESCAPE
 
-from surf import Swell, SurfBreak, angled_sea_floor
-from surfer import Surfer
-from viz import SurfBreakViz
-from player import KeyboardPlayer
+from swell.envs.surf import Swell, SurfBreak, angled_sea_floor
+from swell.envs.surfer import Surfer
+from swell.envs.viz import SurfBreakViz
+from swell.envs.player import KeyboardPlayer
 
 
 def run_game(viz, player, fps=100):

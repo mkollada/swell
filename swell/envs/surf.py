@@ -6,8 +6,8 @@ To-do:
 - duck dive
 - crashing
     - what happens if wave crashes on you
-- implement an agent
-    - generate state vectors from surfbreak
+- implement OpenAI gym env
+- implement an agent in open 
 - Refactor
     - main loop
 '''

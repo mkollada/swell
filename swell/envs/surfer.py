@@ -8,6 +8,7 @@ class Surfer:
                  turn_speed,
                  speed_init=np.array([0, 0]),
                  wave_speed_const=10,
+                 max_speed=10,
                  image_dir='/Users/mattkollada/PycharmProjects/swell/envs/resource/images/',
                  image_name_dict={0: 'paddling_surfer.png',
                                   1: 'standing_surfer.png'}):
@@ -21,13 +22,14 @@ class Surfer:
         self.paddle_speed = paddle_speed
         self.turn_speed = turn_speed
         self.wave_speed_const = wave_speed_const
+        self.max_speed = max_speed
 
-        self.action_space = set('up', 'down', 'left', 'right', 'change_mode')
+        self.action_space = ['up', 'down', 'left', 'right', 'change_mode']
 
         # 0 for paddle mode, 1 for standing up
         self.mode = 0
 
-        #
+        # Surfer image related info. Should move this out of surfer eventually
         self.image_dir = image_dir
         self.image_name_dict = image_name_dict
         self.current_image_path = self.get_image_path()
@@ -52,7 +54,7 @@ class Surfer:
                - right, left
            - stand-up
         """
-        assert set(actions.keys()) == self.action_space
+        assert set(actions.keys()) == set(self.action_space)
         if actions['change_mode']:
             self.mode = 1 - self.mode
             self.current_image_path = self.get_image_path()
@@ -147,7 +149,7 @@ class Surfer:
         elif self.y >= self.surfbreak.height:
             self.y = self.surfbreak.height - 2
 
-    def stoke(self):
+    def get_stoke(self):
         '''
         This function calculates the per step reward for a given surfer. This
         function can be overidden when extending the surfer class.
