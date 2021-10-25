@@ -83,12 +83,12 @@ class Surfer:
                                       left=actions['left'],
                                       right=actions['right'])
             self.speed = self.speed + delta_speed
-        elif self.mode == 1:
-            # right = turn clockwise, left = turn counterclockwise
-            if actions['right'] or actions['left']:
-                self.speed = self.turn(self.speed,
-                                       right=actions['right'],
-                                       left=actions['left'])
+        # elif self.mode == 1:
+        #     # right = turn clockwise, left = turn counterclockwise
+        #     if actions['right'] or actions['left']:
+        #         self.speed = self.turn(self.speed,
+        #                                right=actions['right'],
+        #                                left=actions['left'])
 
         self.speed = self.speed + self.get_wave_speed()
         self.apply_water_friction()
