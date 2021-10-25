@@ -7,7 +7,7 @@ To-do:
 - crashing
     - what happens if wave crashes on you
 - implement OpenAI gym env
-- implement an agent in open 
+- implement an agent
 - Refactor
     - main loop
 '''
@@ -17,7 +17,10 @@ def flat_sea_floor(height, width, depth):
     return np.zeros((height, width)) + depth
 
 
-def angled_sea_floor(height, width, parallel_coef, perp_coef, low_depth):
+def angled_sea_floor(height, width,
+                     parallel_coef=0.03,
+                     perp_coef=.25,
+                     low_depth=50):
     floor = np.zeros((height, width))
     for x in range(width):
         for y in range(height):
@@ -27,7 +30,11 @@ def angled_sea_floor(height, width, parallel_coef, perp_coef, low_depth):
 
 
 class SurfBreak:
-    def __init__(self, height, width, sea_floor_func, tide_init, swell,
+    def __init__(self, height=200,
+                 width=200,
+                 sea_floor_func=angled_sea_floor,
+                 tide_init=1,
+                 swell=None,
                  water_friction_coef=1):
         """
         Defines a break environment
@@ -39,11 +46,14 @@ class SurfBreak:
 
         self.height = height
         self.width = width
-        self.sea_floor = sea_floor_func(height, width)  # TO-DO define sea floor func
+        self.sea_floor = sea_floor_func(height, width)
         self.base_water_level = tide_init
         self.active_water_level = np.zeros((height, width)) + tide_init
         self.crashing = np.zeros((height, width))
-        self.swell = swell
+        if swell is None:
+            self.swell = Swell()
+        else:
+            self.swell = swell
         if water_friction_coef > 1 or water_friction_coef < 0:
             raise ValueError('water_friction_coef should be between 0 and 1.')
         self.water_friction_coef = water_friction_coef
@@ -110,7 +120,11 @@ class Wave:
 
 
 class Swell:
-    def __init__(self, period, height, width, angle, speed):
+    def __init__(self, period=100,
+                 height=8,
+                 width=16,
+                 angle=2,
+                 speed=4):
         """
         Defines a function that creates waves
 

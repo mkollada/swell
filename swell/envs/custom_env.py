@@ -2,23 +2,27 @@ import numpy as np
 import gym
 from gym import spaces
 from swell.envs.viz import WAVE_MAX_HEIGHT, SurfBreakViz
+from swell.envs.surfer import Surfer
 import pygame
 
 
 class SurfSesh(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, surfer, max_timesteps=1000, render=False):
+    def __init__(self, surfer=None, max_timesteps=1000, render=False):
         super(SurfSesh, self).__init__()
 
-        self.surfer = surfer
+        if surfer is None:
+            self.surfer = Surfer()
+        else:
+            self.surfer = surfer
         self.max_timesteps = max_timesteps
 
         # For now observation space will be water height, whether or not the
         # wave is crashing at each point, position, and speed
         self.observation_space = spaces.Dict({
             'active_water_level': spaces.Box(
-                low=surfer.surfbreak.base_water_level,
+                low=self.surfer.surfbreak.base_water_level,
                 high=WAVE_MAX_HEIGHT,
                 shape=(self.surfer.surfbreak.height,
                        self.surfer.surfbreak.width)
@@ -37,7 +41,7 @@ class SurfSesh(gym.Env):
                                 shape=(2,))
         })
 
-        self.action_space = spaces.MultiBinary(n=len(surfer.action_space))
+        self.action_space = spaces.MultiBinary(n=len(self.surfer.action_space))
 
         self.render_ = render
 
@@ -71,8 +75,6 @@ class SurfSesh(gym.Env):
         # Render the environment to the screen
         # TO-DO
         assert self.render_
-
-
 
     def close(self):
         if self.render_:

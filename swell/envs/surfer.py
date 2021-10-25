@@ -1,11 +1,14 @@
 import os
 import numpy as np
+from swell.envs.surf import SurfBreak
 
 
 class Surfer:
-    def __init__(self, surfbreak, init_x, init_y,
-                 paddle_speed,
-                 turn_speed,
+    def __init__(self, surfbreak=None,
+                 init_x=0,
+                 init_y=0,
+                 paddle_speed=1,
+                 turn_speed=1,
                  speed_init=np.array([0, 0]),
                  wave_speed_const=10,
                  max_speed=10,
@@ -15,7 +18,10 @@ class Surfer:
         """
         Class that defines a surfer and how the surfer behaves in the surfbreak
         """
-        self.surfbreak = surfbreak
+        if surfbreak is None:
+            self.surfbreak = SurfBreak()
+        else:
+            self.surfbreak = surfbreak
         self.x = init_x
         self.y = init_y
         self.speed = speed_init
