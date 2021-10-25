@@ -70,6 +70,15 @@ class SurfSesh(gym.Env):
         self.surfer.surfbreak.counter = 0
         self.surfer.y = int(np.random.rand() * self.surfer.surfbreak.height)
         self.surfer.x = int(np.random.rand() * self.surfer.surfbreak.width)
+        self.surfer.speed[0] = 0
+        self.surfer.speed[1] = 0
+
+        return {
+            'active_water_level': self.surfer.surfbreak.active_water_level,
+            'crashing': self.surfer.surfbreak.crashing,
+            'position': [self.surfer.y, self.surfer.x],
+            'speed': self.surfer.speed
+        }
 
     def render(self, mode='human', close=False):
         # Render the environment to the screen
