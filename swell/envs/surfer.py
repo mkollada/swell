@@ -22,9 +22,12 @@ class Surfer:
         self.turn_speed = turn_speed
         self.wave_speed_const = wave_speed_const
 
+        self.action_space = set('up', 'down', 'left', 'right', 'change_mode')
+
         # 0 for paddle mode, 1 for standing up
         self.mode = 0
-        # self.current_image_name = init_image_name
+
+        #
         self.image_dir = image_dir
         self.image_name_dict = image_name_dict
         self.current_image_path = self.get_image_path()
@@ -49,6 +52,7 @@ class Surfer:
                - right, left
            - stand-up
         """
+        assert set(actions.keys()) == self.action_space
         if actions['change_mode']:
             self.mode = 1 - self.mode
             self.current_image_path = self.get_image_path()
@@ -113,7 +117,6 @@ class Surfer:
 
         return speed
 
-    # To-do
     def get_wave_speed(self):
         """
         Gets additive wave speed based on position on wave
@@ -131,26 +134,6 @@ class Surfer:
             wave_speed[1] = self.surfbreak.crashing[self.y, self.x - 1] - \
                             self.surfbreak.crashing[self.y, self.x + 1]
 
-
-
-
-        # At the edges, speed calc can get thrown off
-        # so checking and fixing for that
-        # y1, y2, x1, x2 = self.y - 1, self.y + 1, self.x - 1, self.x + 1
-        # if self.y == 0:
-        #     y1 = 0
-        # if self.y == (self.surfbreak.height - 1):
-        #     y2 = self.surfbreak.height - 1
-        # if self.x == 0:
-        #     x1 = 0
-        # if self.x == (self.surfbreak.width - 1):
-        #     x2 = self.surfbreak.width - 1
-
-        # wave_speed[0] = self.surfbreak.crashing[y1, self.x] - \
-        #                 self.surfbreak.crashing[y2, self.x]
-        # wave_speed[1] = self.surfbreak.crashing[self.y, x1] - \
-        #                 self.surfbreak.crashing[self.y, x2]
-
         return wave_speed * self.wave_speed_const
 
     def check_edges(self):
@@ -163,3 +146,15 @@ class Surfer:
             self.y = 0
         elif self.y >= self.surfbreak.height:
             self.y = self.surfbreak.height - 2
+
+    def stoke(self):
+        '''
+        This function calculates the per step reward for a given surfer. This
+        function can be overidden when extending the surfer class.
+
+        :return: This simple reward function returns either zero, if the surfer
+        is paddling, or the magnitude of the speed vector of the surfer, if the
+        surfer is standing up, at each step.
+        '''
+
+        return np.sqrt(np.sum(np.square(self.speed))) * self.mode
