@@ -11,10 +11,7 @@ class Surfer:
                  turn_speed=1,
                  speed_init=np.array([0, 0]),
                  wave_speed_const=10,
-                 max_speed=10,
-                 image_dir='/Users/mattkollada/PycharmProjects/swell/envs/resource/images/',
-                 image_name_dict={0: 'paddling_surfer.png',
-                                  1: 'standing_surfer.png'}):
+                 max_speed=10):
         """
         Class that defines a surfer and how the surfer behaves in the surfbreak
         """
@@ -34,14 +31,6 @@ class Surfer:
 
         # 0 for paddle mode, 1 for standing up
         self.mode = 0
-
-        # Surfer image related info. Should move this out of surfer eventually
-        self.image_dir = image_dir
-        self.image_name_dict = image_name_dict
-        self.current_image_path = self.get_image_path()
-
-    def get_image_path(self):
-        return os.path.join(self.image_dir, self.image_name_dict[self.mode])
 
     def step(self, actions):
         """
@@ -63,7 +52,6 @@ class Surfer:
         assert set(actions.keys()) == set(self.action_space)
         if actions['change_mode']:
             self.mode = 1 - self.mode
-            self.current_image_path = self.get_image_path()
         self.update_speed(actions)
         self.y = int(self.y + self.speed[0])
         self.x = int(self.x + self.speed[1])

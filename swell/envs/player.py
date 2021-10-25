@@ -8,31 +8,9 @@ from pygame.locals import (
 )
 
 
-class Player(sprite.Sprite):
-    def __init__(self, surfer, sprite_height=20, sprite_width=20):
-        self.surfer = surfer
-        self.sprite_height = sprite_height
-        self.sprite_width = sprite_width
-
-        self.surface = self.load_surface()
-
-    def step(self, actions):
-        self.surfer.step(actions)
-
-    def load_surface(self):
-        surface = image.load(self.surfer.current_image_path)
-        surface = transform.scale(surface,
-                                  (self.sprite_height,
-                                   self.sprite_width))
-
-        return surface
-
-
-class KeyboardPlayer(Player):
-    def __init__(self, surfer, sprite_height=20, sprite_width=20):
-        super().__init__(surfer=surfer,
-                         sprite_height=sprite_height,
-                         sprite_width=sprite_width)
+class KeyboardPlayer:
+    def __init__(self, surfer_viz):
+        self.surfer_viz = surfer_viz
 
     def step(self, pressed_keys):
         key_map = {
@@ -47,9 +25,4 @@ class KeyboardPlayer(Player):
         for key in key_map:
             actions[key_map[key]] = pressed_keys[key]
 
-        self.surfer.step(actions)
-
-        if actions['change_mode']:
-            self.surface = self.load_surface()
-
-
+        self.surfer_viz.step(actions)

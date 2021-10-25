@@ -1,5 +1,6 @@
+import os
 import seaborn as sns
-from pygame import Surface, PixelArray, Color
+from pygame import Surface, PixelArray, Color, image, transform
 
 WAVE_MAX_HEIGHT = 20
 SEAFLOOR_MIN_HEIGHT = -20
@@ -80,3 +81,43 @@ class SurfBreakViz:
             elif ix < 0:
                 ix = 0
             return SEA_COLOR_PALETTE[ix]
+
+
+class SurferViz:
+    def __init__(self, surfer,
+                 image_dir='/Users/mattkollada/PycharmProjects/swell/swell/envs/resource/images/',
+                 sprite_height=20,
+                 sprite_width=20,
+                 image_name_dict={0: 'paddling_surfer.png',
+                                  1: 'standing_surfer.png'}
+                 ):
+        self.surfer = surfer
+        self.sprite_height = sprite_height
+        self.sprite_width = sprite_width
+
+        print(surfer.mode)
+
+        self.image_dir = image_dir
+        self.image_name_dict = image_name_dict
+
+        self.surface = self.load_surface()
+
+
+
+    def get_image_path(self):
+        return os.path.join(self.image_dir,
+                            self.image_name_dict[self.surfer.mode])
+
+    def load_surface(self):
+        surface = image.load(self.get_image_path())
+        surface = transform.scale(surface,
+                                  (self.sprite_height,
+                                   self.sprite_width))
+
+        return surface
+
+    def step(self, actions):
+        self.surfer.step(actions)
+
+        if actions['change_mode']:
+            self.surface = self.load_surface()

@@ -1,10 +1,13 @@
+'''
+This file allows you to run swell and play the game using the keyboard
+'''
 from functools import partial
 import pygame
 from pygame.locals import K_ESCAPE
 
 from swell.envs.surf import Swell, SurfBreak, angled_sea_floor
 from swell.envs.surfer import Surfer
-from swell.envs.viz import SurfBreakViz
+from swell.envs.viz import SurfBreakViz, SurferViz
 from swell.envs.player import KeyboardPlayer
 
 
@@ -28,9 +31,9 @@ def run_game(viz, player, fps=100):
                 viz.step()
                 player.step(pressed_keys)
                 screen.blit(viz.surface, (0, 0))
-                screen.blit(player.surface,
-                            ((player.surfer.x - player.sprite_width / 2),
-                             (player.surfer.y - player.sprite_height / 2)))
+                screen.blit(player.surfer_viz.surface,
+                            ((player.surfer_viz.surfer.x - player.surfer_viz.sprite_width / 2),
+                             (player.surfer_viz.surfer.y - player.surfer_viz.sprite_height / 2)))
                 pygame.display.flip()
 
     pygame.quit()
@@ -59,7 +62,8 @@ if __name__ == '__main__':
                     init_y=0,
                     paddle_speed=1,
                     turn_speed=1)
-    player1 = KeyboardPlayer(surfer=surfer)
+    surfer_viz = SurferViz(surfer=surfer)
+    player1 = KeyboardPlayer(surfer_viz=surfer_viz)
 
     run_game(sb_viz, player1, fps=FPS)
 

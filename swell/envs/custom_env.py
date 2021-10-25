@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 from gym import spaces
-from swell.envs.viz import WAVE_MAX_HEIGHT, SurfBreakViz
+from swell.envs.viz import WAVE_MAX_HEIGHT, SurfBreakViz, SurferViz
 from swell.envs.surfer import Surfer
 import pygame
 
@@ -28,15 +28,15 @@ class SurfSesh(gym.Env):
                        self.surfer.surfbreak.width)
             ),
             'crashing': spaces.Box(low=0,
-                                  high=WAVE_MAX_HEIGHT,
-                                  shape=(self.surfer.surfbreak.height,
-                                         self.surfer.surfbreak.width)),
+                                   high=WAVE_MAX_HEIGHT,
+                                   shape=(self.surfer.surfbreak.height,
+                                          self.surfer.surfbreak.width)),
             'position': spaces.Box(low=np.array([0, 0]),
                                    high=np.array([
                                        self.surfer.surfbreak.height,
                                        self.surfer.surfbreak.width
                                    ])),
-            'speed': spaces.Box(low=-1*self.surfer.max_speed,
+            'speed': spaces.Box(low=-1 * self.surfer.max_speed,
                                 high=self.surfer.max_speed,
                                 shape=(2,))
         })
@@ -44,15 +44,25 @@ class SurfSesh(gym.Env):
         self.action_space = spaces.MultiBinary(n=len(self.surfer.action_space))
 
         self.render_ = render
+        if self.render_:
+            self.sb_viz = SurfBreakViz(self.surfer.surfbreak)
+            self.surfer_viz = SurferViz(self.surfer)
+            successes, failures = pygame.init()
+            self.screen = pygame.display.set_mode((self.sb_viz.surfbreak.width,
+                                                   self.sb_viz.surfbreak.height))
+            # self.clock = pygame.time.Clock()
+            # pygame.time.set_timer(STEPALL, fps)
 
     def step(self, actions):
         assert len(actions) == len(self.surfer.action_space)
-        actions = dict(zip(self.surfer.action_space,actions))
+        actions = dict(zip(self.surfer.action_space, actions))
         self.surfer.step(actions)
         if self.render_:
-            self.viz.step()
+            self.sb_viz.step()
+            self.surfer_viz.step(actions)
         else:
             self.surfer.surfbreak.step()
+            self.surfer.step(actions)
 
         obs = {
             'active_water_level': self.surfer.surfbreak.active_water_level,
@@ -85,8 +95,12 @@ class SurfSesh(gym.Env):
         # TO-DO
         assert self.render_
 
+        self.screen.blit(self.sb_viz.surface, (0, 0))
+        self.screen.blit(self.surfer_viz.surface,
+                         ((self.surfer.x - self.surfer_viz.sprite_width / 2),
+                          (self.surfer.y - self.surfer_viz.sprite_height / 2)))
+        pygame.display.flip()
+
     def close(self):
         if self.render_:
             pygame.quit()
-
-
