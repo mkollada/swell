@@ -12,5 +12,5 @@ pip install swell
 
 To run simple example of training and rendering with [Stable Baselines](https://github.com/DLR-RM/stable-baselines3):
 ```
-python swell/examples/stable_baselines.py
+python swell/examples.py
 ```
