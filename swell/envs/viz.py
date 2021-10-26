@@ -85,17 +85,20 @@ class SurfBreakViz:
 
 class SurferViz:
     def __init__(self, surfer,
-                 image_dir='/Users/mattkollada/PycharmProjects/swell/swell/envs/resource/images/',
+                 image_dir=os.path.join(os.path.dirname(__file__),
+                                        'resource',
+                                        'images'),
                  sprite_height=20,
                  sprite_width=20,
                  image_name_dict={0: 'paddling_surfer.png',
                                   1: 'standing_surfer.png'}
                  ):
+
+        print()
+
         self.surfer = surfer
         self.sprite_height = sprite_height
         self.sprite_width = sprite_width
-
-        print(surfer.mode)
 
         self.image_dir = image_dir
         self.image_name_dict = image_name_dict
