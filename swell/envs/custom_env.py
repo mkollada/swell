@@ -9,7 +9,7 @@ import pygame
 class SurfSesh(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, surfer=None, max_timesteps=1000, render=False):
+    def __init__(self, surfer=None, max_timesteps=1000, render=False, fps=5):
         super(SurfSesh, self).__init__()
 
         if surfer is None:
@@ -43,6 +43,8 @@ class SurfSesh(gym.Env):
 
         self.action_space = spaces.MultiBinary(n=len(self.surfer.action_space))
 
+        self.fps = fps
+
         self.render_ = render
         if self.render_:
             self.sb_viz = SurfBreakViz(self.surfer.surfbreak)
@@ -50,8 +52,7 @@ class SurfSesh(gym.Env):
             successes, failures = pygame.init()
             self.screen = pygame.display.set_mode((self.sb_viz.surfbreak.width,
                                                    self.sb_viz.surfbreak.height))
-            # self.clock = pygame.time.Clock()
-            # pygame.time.set_timer(STEPALL, fps)
+            self.clock = pygame.time.Clock()
 
     def step(self, actions):
         assert len(actions) == len(self.surfer.action_space)
@@ -93,6 +94,8 @@ class SurfSesh(gym.Env):
         # Render the environment to the screen
         # TO-DO
         assert self.render_
+
+        self.clock.tick(self.fps)
 
         self.screen.blit(self.sb_viz.surface, (0, 0))
         self.screen.blit(self.surfer_viz.surface,
