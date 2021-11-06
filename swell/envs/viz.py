@@ -97,8 +97,6 @@ class SurferViz:
                                   1: 'standing_surfer.png'}
                  ):
 
-        print()
-
         self.surfer = surfer
         self.sprite_height = sprite_height
         self.sprite_width = sprite_width
@@ -115,7 +113,8 @@ class SurferViz:
                             self.image_name_dict[self.surfer.mode])
 
     def load_surface(self):
-        surface = image.load(self.get_image_path())
+        self.current_image_path = self.get_image_path()
+        surface = image.load(self.current_image_path)
         surface = transform.scale(surface,
                                   (self.sprite_height,
                                    self.sprite_width))
