@@ -8,15 +8,28 @@ NOTE:
 import os
 from swell.envs.custom_env import SurfSesh
 from stable_baselines3 import PPO
+from stable_baselines3.common.policies import MultiInputActorCriticPolicy
+from stable_baselines.common.schedules import LinearSchedule, ConstantSchedule
+# from stable_baselines3.common.torch_layers import CombinedExtractor
 
 env = SurfSesh(render=True)
-
-model = PPO('MultiInputPolicy', env, verbose=2)
+schedule = ConstantSchedule(value=1e-3)
+model = PPO(
+    # policy=MultiInputActorCriticPolicy(
+    #     observation_space=env.observation_space,
+    #     action_space=env.action_space,
+    #     lr_schedule=ConstantSchedule
+    # ),
+    policy='MultiInputPolicy',
+    env=env,
+    verbose=10,
+    # n_steps=10000
+    )
 
 if os.path.isfile('models/test_model.zip'):
     model.load('models/test_model', env=env)
 else:
-    model.learn(100)
+    model.learn(1000)
     model.save('models/test_model')
 
 obs = env.reset()
