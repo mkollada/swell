@@ -56,7 +56,6 @@ class SurfSesh(gym.Env):
     def step(self, actions):
         assert len(actions) == len(self.surfer.action_space)
         actions = dict(zip(self.surfer.action_space, actions))
-        self.surfer.step(actions)
         if self.render_:
             self.sb_viz.step()
             self.surfer_viz.step(actions)
