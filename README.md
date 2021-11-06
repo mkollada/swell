@@ -14,3 +14,8 @@ To run simple example of training and rendering with [Stable Baselines](https://
 ```
 python swell/examples.py
 ```
+
+To play swell manually with your keyboard run:
+```
+python swell/main.py
+```
