@@ -11,7 +11,8 @@ class Surfer:
                  turn_speed=1,
                  speed_init=np.array([0, 0]),
                  wave_speed_const=10,
-                 max_speed=10):
+                 max_speed=10,
+                 min_stoke=0.5):
         """
         Class that defines a surfer and how the surfer behaves in the surfbreak
         """
@@ -26,6 +27,7 @@ class Surfer:
         self.turn_speed = turn_speed
         self.wave_speed_const = wave_speed_const
         self.max_speed = max_speed
+        self.min_stoke = min_stoke
 
         self.action_space = ['up', 'down', 'left', 'right', 'change_mode']
 
@@ -157,4 +159,6 @@ class Surfer:
         '''
 
         stoke = np.sqrt(np.sum(np.square(self.speed))) * self.mode
+        if stoke < self.min_stoke:
+            stoke = 0
         return stoke
