@@ -12,6 +12,9 @@ CRASH_COLOR = (255, 255, 255)
 BEACH_COLOR = (230, 207, 138)
 WAVE_BREAK_RATIO = 2
 
+'''
+TO-DO: Make Viz class that encompasses both surfbreak viz and surfer viz
+'''
 
 class SurfBreakViz:
     def __init__(self, surfbreak):

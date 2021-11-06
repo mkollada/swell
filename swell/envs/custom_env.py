@@ -52,6 +52,11 @@ class SurfSesh(gym.Env):
             successes, failures = pygame.init()
             self.screen = pygame.display.set_mode((self.sb_viz.surfbreak.width,
                                                    self.sb_viz.surfbreak.height))
+            self.my_font = pygame.font.SysFont("monospace", 16)
+            score_text = self.my_font.render("Stoke: " + str(self.surfer_viz.surfer.total_stoke),
+                                        1, (0, 0, 0))
+            self.screen.blit(score_text, (5, 5))
+
             self.clock = pygame.time.Clock()
 
     def step(self, actions):
@@ -101,6 +106,9 @@ class SurfSesh(gym.Env):
         self.screen.blit(self.surfer_viz.surface,
                          ((self.surfer.x - self.surfer_viz.sprite_width / 2),
                           (self.surfer.y - self.surfer_viz.sprite_height / 2)))
+        score_text = self.my_font.render("Stoke: " + str(self.surfer_viz.surfer.total_stoke),
+                                    1, (0, 0, 0))
+        self.screen.blit(score_text, (5, 5))
         pygame.display.flip()
 
     def close(self):

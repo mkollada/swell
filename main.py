@@ -19,6 +19,11 @@ def run_game(viz, player, fps=100):
     clock = pygame.time.Clock()
     pygame.time.set_timer(STEPALL, fps)
 
+    my_font = pygame.font.SysFont("monospace", 16)
+    score_text = my_font.render("Stoke: " + str(player.surfer_viz.surfer.total_stoke),
+                                1, (0, 0, 0))
+    screen.blit(score_text, (5, 5))
+
     running = True
     while running:
         clock.tick(fps)
@@ -34,6 +39,9 @@ def run_game(viz, player, fps=100):
                 screen.blit(player.surfer_viz.surface,
                             ((player.surfer_viz.surfer.x - player.surfer_viz.sprite_width / 2),
                              (player.surfer_viz.surfer.y - player.surfer_viz.sprite_height / 2)))
+                score_text = my_font.render("Stoke: " + str(player.surfer_viz.surfer.total_stoke),
+                                            1, (0, 0, 0))
+                screen.blit(score_text, (5, 5))
                 pygame.display.flip()
 
     pygame.quit()
@@ -66,5 +74,3 @@ if __name__ == '__main__':
     player1 = KeyboardPlayer(surfer_viz=surfer_viz)
 
     run_game(sb_viz, player1, fps=FPS)
-
-
