@@ -32,6 +32,8 @@ class Surfer:
         # 0 for paddle mode, 1 for standing up
         self.mode = 0
 
+        self.total_stoke = 0
+
     def step(self, actions):
         """
         Receives an action and moves the agent forward one step
@@ -50,12 +52,13 @@ class Surfer:
            - stand-up
         """
         assert set(actions.keys()) == set(self.action_space)
-        if actions['change_mode']:
+        if actions['change_mode'] == 1:
             self.mode = 1 - self.mode
         self.update_speed(actions)
         self.y = int(self.y + self.speed[0])
         self.x = int(self.x + self.speed[1])
         self.check_edges()
+        self.total_stoke = self.total_stoke + self.get_stoke()
 
     def apply_water_friction(self, func=None):
         if func is not None:
@@ -146,11 +149,12 @@ class Surfer:
     def get_stoke(self):
         '''
         This function calculates the per step reward for a given surfer. This
-        function can be overidden when extending the surfer class.
+        function can be overridden when extending the surfer class.
 
         :return: This simple reward function returns either zero, if the surfer
         is paddling, or the magnitude of the speed vector of the surfer, if the
         surfer is standing up, at each step.
         '''
 
-        return np.sqrt(np.sum(np.square(self.speed))) * self.mode
+        stoke = np.sqrt(np.sum(np.square(self.speed))) * self.mode
+        return stoke
